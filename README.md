@@ -56,4 +56,3 @@ To build an intelligent, scalable pet-care assistant that enhances pet welfare w
 
 **https://jeevmitr.vercel.app/**
 
----
