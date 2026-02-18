@@ -12,22 +12,35 @@ Key Features
  •	AI-Based Bark Analysis (Research Phase)
  
  •	Audio pattern recognition to classify dog barks
+ 
  •	Machine learning models to infer potential needs or distress signals
+ 
  •	Pet Health Monitoring
+ 
  •	Tracks key health metrics and history
+ 
  •	Subscription-based services
+ 
  •	Pet Care Services Integration (Planned)
+ 
     o	Grooming
+    
     o	Training
+    
     o	Veterinary consultation
+    
  •	Pet Product Ecosystem (Future Scope)
+ 
  •	Unified marketplace for pet essentials and supplies
 
 Technology Stack
 
  •	Machine Learning for audio classification
+ 
  •	Python-based AI workflows
+ 
  •	Data-driven pet behavior analysis
+ 
  •	Scalable application architecture
 
 Project Status :🚧 Work in Progress — Currently in the research and prototyping phase, including active exploration of dog breed classification and bark-pattern datasets.
