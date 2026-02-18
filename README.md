@@ -1,53 +1,64 @@
+# Jeevmitr
 
-Jeevmitr 
+**Jeevmitr** is an AI-powered pet-care ecosystem focused on improving animal well-being through intelligent insights and accessible digital services. The platform enables pet owners to better understand their pets and manage their health efficiently.
 
-Jeevmitr is a smart pet-care ecosystem designed to enhance animal well-being through AI-driven insights and accessible digital services. The platform empowers pet owners to better understand their pets and manage their health efficiently.
+---
 
-Vision
+## Vision
 
-To bridge the communication gap between pets and owners using intelligent technology.
+To bridge the communication gap between pets and owners using scalable, data-driven technology.
 
-Key Features
+---
 
- •	AI-Based Bark Analysis (Research Phase)
- 
- •	Audio pattern recognition to classify dog barks
- 
- •	Machine learning models to infer potential needs or distress signals
- 
- •	Pet Health Monitoring
- 
- •	Tracks key health metrics and history
- 
- •	Subscription-based services
- 
- •	Pet Care Services Integration (Planned)
- 
-    o	Grooming
-    
-    o	Training
-    
-    o	Veterinary consultation
-    
- •	Pet Product Ecosystem (Future Scope)
- 
- •	Unified marketplace for pet essentials and supplies
+## Key Features
 
-Technology Stack
+**AI-Based Bark Analysis (Research Phase)**  
+- Audio pattern recognition for dog bark classification  
+- Machine learning models to infer potential needs or distress signals  
 
- •	Machine Learning for audio classification
- 
- •	Python-based AI workflows
- 
- •	Data-driven pet behavior analysis
- 
- •	Scalable application architecture
+**Pet Health Monitoring**  
+- Tracks essential pet health metrics and history  
+- Supports data-driven pet care decisions  
 
-Project Status :🚧 Work in Progress — Currently in the research and prototyping phase, including active exploration of dog breed classification and bark-pattern datasets.
+**Pet Care Services (Planned)**  
+- Grooming  
+- Training  
+- Veterinary consultation  
+- Subscription-based services  
 
-Goal 
+**Pet Product Ecosystem (Future Scope)**  
+- Unified platform for pet essentials and supplies  
 
-To build an intelligent, scalable pet-care assistant that improves pet welfare while delivering convenience and peace of mind to pet owners.
+---
 
-Live Website 🔗 
-https://jeevmitr.vercel.app
+## Technology Stack
+
+- Python-based AI workflows 
+- Machine Learning (Audio Classification)  
+- Data-Driven Pet Behavior Analysis  
+- Scalable Application Architecture  
+
+---
+
+## Project Status
+
+**Work in Progress** — Currently in the research and prototyping phase, with active exploration of dog breed classification and bark-pattern datasets.
+
+---
+
+## Goal
+
+To build an intelligent, scalable pet-care assistant that enhances pet welfare while providing convenience and peace of mind to pet owners.
+
+---
+
+## Live Website
+
+**https://jeevmitr.vercel.app/**
+
+---
+
+## Contributing
+
+Contributions, suggestions, and feedback are welcome. Please open an issue or submit a pull request.
+
