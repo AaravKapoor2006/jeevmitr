@@ -57,8 +57,3 @@ To build an intelligent, scalable pet-care assistant that enhances pet welfare w
 **https://jeevmitr.vercel.app/**
 
 ---
-
-## Contributing
-
-Contributions, suggestions, and feedback are welcome. Please open an issue or submit a pull request.
-
