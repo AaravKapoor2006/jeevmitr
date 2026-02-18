@@ -10,6 +10,7 @@ To bridge the communication gap between pets and owners using intelligent techno
 Key Features
 
  •	AI-Based Bark Analysis (Research Phase)
+ 
  •	Audio pattern recognition to classify dog barks
  •	Machine learning models to infer potential needs or distress signals
  •	Pet Health Monitoring
