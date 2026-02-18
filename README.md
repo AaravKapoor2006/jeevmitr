@@ -1,44 +1,72 @@
 
-Jeevmitr is a smart pet-care ecosystem aimed at improving animal well-being through AI-driven insights and accessible digital services. The platform focuses on helping pet owners better understand their pets and manage their health efficiently.
+Jeevmitr
+Jeevmitr is a smart pet-care ecosystem designed to enhance animal well-being through AI-driven insights and accessible digital services. The platform empowers pet owners to better understand their pets and manage their health efficiently.
 
-The core vision of Jeevmitr is to bridge the communication gap between pets and owners using technology. One of the primary research directions involves analyzing dog barking patterns using machine learning to infer potential needs or distress signals.
+Vision
+To bridge the communication gap between pets and owners using intelligent technology.
 
-🚀 Key Features
-🐶 AI-Based Bark Analysis (Research Phase)
-Uses audio pattern recognition to classify dog barks and interpret possible meanings.
+Key Features
+AI-Based Bark Analysis (Research Phase)
 
-📊 Pet Health Monitoring
-Tracks important pet health metrics and history.
 
-🛁 Pet Care Services Integration (Planned)
+Audio pattern recognition to classify dog barks
+
+
+Machine learning models to infer potential needs or distress signals
+
+
+Pet Health Monitoring
+
+
+Tracks key health metrics and history
+
+
+Enables data-driven pet care decisions
+
+
+Pet Care Services Integration (Planned)
+
 
 Grooming
 
+
 Training
+
 
 Veterinary consultation
 
+
 Subscription-based services
 
-🛒 Pet Product Ecosystem (Future Scope)
-Unified platform for pet essentials and supplies.
 
-🧠 Tech Vision
-Jeevmitr leverages:
+Pet Product Ecosystem (Future Scope)
+
+
+Unified marketplace for pet essentials and supplies
+
+
+
+Technology Stack
+
 
 Machine Learning for audio classification
 
+
 Python-based AI workflows
+
 
 Data-driven pet behavior analysis
 
-Scalable app architecture for real-world deployment
 
-📌 Current Status
-🚧 Work in Progress — currently in the research and prototyping phase, with active exploration of dog breed classification and bark-pattern datasets.
+Scalable application architecture
 
-🎯 Goal
-To build an intelligent, scalable pet-care assistant that enhances pet welfare while providing convenience and peace of mind to pet owners.
 
-##LIVE WEBSITE LINK:
-🔗https://jeevmitr.vercel.app/
+
+Project Status
+🚧 Work in Progress — Currently in the research and prototyping phase, including active exploration of dog breed classification and bark-pattern datasets.
+
+Goal
+To build an intelligent, scalable pet-care assistant that improves pet welfare while delivering convenience and peace of mind to pet owners.
+
+Live Website
+🔗 https://jeevmitr.vercel.app
