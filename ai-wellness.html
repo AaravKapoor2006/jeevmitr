@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Wellness Analysis - JeevMitr</title>
+<style>
+  :root {
+    --primary: #1D9E75;
+    --primary-dark: #0F6E56;
+    --primary-light: #E1F5EE;
+    --primary-pale: #f0faf6;
+    --amber: #EF9F27;
+    --amber-light: #FAEEDA;
+    --red: #E24B4A;
+    --red-light: #FCEBEB;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+
+  nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-size: 22px; font-weight: 700; color: var(--primary); padding: 14px 0; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; padding: 8px 12px; border-radius: var(--radius-sm); transition: all 0.15s; }
+  .nav-links a:hover, .nav-links a.active { background: var(--primary-light); color: var(--primary-dark); }
+  .nav-user { display: flex; gap: 8px; align-items: center; }
+  .nav-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; cursor: pointer; }
+
+  .page-header { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); color: white; padding: 40px 24px; text-align: center; }
+  .page-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .page-header p { font-size: 15px; opacity: 0.85; max-width: 520px; margin: 0 auto; }
+  .badge-row { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.2); color: white; font-size: 12px; padding: 4px 12px; border-radius: 20px; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 16px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 680px) { .two-col { grid-template-columns: 1fr; } .nav-links { display: none; } }
+
+  .card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+  .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .card-header h3 { font-size: 15px; font-weight: 600; }
+  .card-header p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .card-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .card-body { padding: 20px; }
+
+  .pet-selector { display: flex; gap: 12px; margin-bottom: 20px; }
+  .pet-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.15s; background: var(--white); }
+  .pet-btn.selected { border-color: var(--primary); background: var(--primary-pale); }
+  .pet-btn span:first-child { font-size: 26px; }
+  .pet-btn span:last-child { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+  .pet-btn.selected span:last-child { color: var(--primary-dark); }
+
+  .upload-area { border: 2px dashed var(--border); border-radius: var(--radius); padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+  .upload-area:hover, .upload-area.active { border-color: var(--primary); background: var(--primary-pale); }
+  .upload-area .icon { font-size: 32px; margin-bottom: 10px; }
+  .upload-area h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .upload-area p { font-size: 12px; color: var(--text-muted); }
+  .upload-area .cta { font-size: 13px; color: var(--primary); font-weight: 600; margin-top: 10px; }
+  .upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+  .waveform-container { background: var(--primary-pale); border-radius: var(--radius-sm); padding: 14px; margin-top: 12px; display: none; }
+  .waveform-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .waveform-label { font-size: 12px; color: var(--text-muted); }
+  .waveform-status { font-size: 11px; background: var(--primary-light); color: var(--primary-dark); padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+  .waveform-bars { display: flex; align-items: flex-end; gap: 2px; height: 48px; }
+  .waveform-bars .bar { border-radius: 2px; background: var(--primary); width: 5px; }
+  .waveform-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+  .face-preview { display: none; margin-top: 12px; background: var(--primary-pale); border-radius: var(--radius-sm); padding: 14px; }
+  .face-frame { background: #9FE1CB; border-radius: var(--radius-sm); height: 100px; display: flex; align-items: center; justify-content: center; font-size: 50px; position: relative; overflow: hidden; margin-bottom: 10px; }
+  .face-box-overlay { position: absolute; border: 2.5px solid var(--primary-dark); border-radius: 8px; width: 60px; height: 60px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .corner { position: absolute; width: 10px; height: 10px; border-color: var(--primary-dark); border-style: solid; }
+  .tl { top: -2px; left: -2px; border-width: 3px 0 0 3px; border-radius: 2px 0 0 0; }
+  .tr { top: -2px; right: -2px; border-width: 3px 3px 0 0; border-radius: 0 2px 0 0; }
+  .bl { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; border-radius: 0 0 0 2px; }
+  .br { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; border-radius: 0 0 2px 0; }
+  .face-caption { font-size: 11px; color: var(--text-muted); text-align: center; }
+
+  .analyze-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .analyze-btn:hover { background: var(--primary-dark); }
+  .analyze-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; display: none; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-wrap { display: none; margin-top: 12px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; width: 0%; transition: width 0.4s ease; }
+  .progress-steps { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .step-pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--border); color: var(--text-muted); transition: all 0.3s; }
+  .step-pill.done { background: var(--primary-light); color: var(--primary-dark); }
+  .step-pill.active { background: var(--primary); color: white; }
+
+  .results-section { display: none; margin-top: 24px; }
+  .results-section.show { display: block; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  @media (max-width: 680px) { .metric-grid { grid-template-columns: repeat(2, 1fr); } }
+  .metric { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .metric-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric-value { font-size: 26px; font-weight: 700; line-height: 1; }
+  .metric-tag { font-size: 11px; font-weight: 600; margin-top: 4px; }
+  .green { color: var(--primary-dark); } .amber { color: #854F0B; } .red { color: var(--red); }
+
+  .emotion-section { margin-bottom: 20px; }
+  .emotion-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .e-label { font-size: 13px; color: var(--text-muted); width: 70px; flex-shrink: 0; }
+  .e-bar-bg { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .e-bar { height: 100%; border-radius: 4px; width: 0%; transition: width 1s ease; }
+  .e-pct { font-size: 12px; font-weight: 600; color: var(--text); width: 32px; text-align: right; }
+
+  .report-table { width: 100%; border-collapse: collapse; }
+  .report-table tr { border-bottom: 1px solid var(--border); }
+  .report-table tr:last-child { border-bottom: none; }
+  .report-table td { padding: 10px 0; font-size: 13px; }
+  .report-table td:first-child { color: var(--text-muted); }
+  .report-table td:last-child { text-align: right; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill-green { background: var(--primary-light); color: #085041; }
+  .pill-amber { background: var(--amber-light); color: #633806; }
+  .pill-red { background: var(--red-light); color: #A32D2D; }
+
+  .rec-list { display: flex; flex-direction: column; gap: 10px; }
+  .rec-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .rec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .rec-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .rec-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .rec-urgent { border-left: 3px solid var(--amber); }
+  .rec-ok { border-left: 3px solid var(--primary); }
+
+  .book-cta { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); border-radius: var(--radius); padding: 24px; text-align: center; color: white; margin-top: 20px; }
+  .book-cta h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .book-cta p { font-size: 13px; opacity: 0.85; margin-bottom: 16px; }
+  .book-cta-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .book-btn { padding: 10px 22px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-decoration: none; border: none; }
+  .book-btn-primary { background: white; color: var(--primary-dark); }
+  .book-btn-secondary { background: rgba(255,255,255,0.2); color: white; border: 1.5px solid rgba(255,255,255,0.5); }
+
+  .tab-row { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .tab { padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  .info-box { background: var(--primary-pale); border: 1px solid var(--primary-light); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12px; color: var(--primary-dark); margin-bottom: 16px; line-height: 1.6; }
+  .info-box strong { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">JeevMitr</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="pet-healthcare.html">Pet Healthcare</a>
+    <a href="pet-training.html">Pet Training</a>
+    <a href="pet-grooming.html">Pet Grooming</a>
+    <a href="ngo-connect.html">NGO Connect</a>
+    <a href="ai-diagnosis.html" class="active">AI Diagnosis</a>
+    <a href="pet-products.html">Pet Products</a>
+  </div>
+  <div class="nav-user">
+    <button class="nav-btn">Login / Signup</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>🐾 AI Wellness Analysis</h1>
+  <p>Upload your dog's bark recording and a photo — our AI analyzes audio patterns and facial expressions to assess health and emotional wellbeing.</p>
+  <div class="badge-row">
+    <span class="badge">🎵 Bark Analysis (MFCC + STFT)</span>
+    <span class="badge">👁️ Facial Expression AI</span>
+    <span class="badge">📋 Detailed Health Report</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="two-col" id="input-section">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎙️</div>
+        <div>
+          <h3>Bark Recording</h3>
+          <p>Upload an audio clip of your dog barking</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-box">
+          <strong>How it works:</strong> Our AI uses MFCC (Mel-Frequency Cepstral Coefficients) and STFT (Short-Time Fourier Transform) to analyze bark tone, pitch, rhythm, and frequency — detecting stress, pain, and emotional state.
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:10px;">Select your pet</label>
+          <div class="pet-selector">
+            <button class="pet-btn selected" onclick="selectPet(this)"><span>🐕</span><span>Dog</span></button>
+            <button class="pet-btn" onclick="selectPet(this)"><span>🐱</span><span>Cat</span></button>
+            <button class="pet-btn" onclick="selectPet(this)"><span>🐦</span><span>Bird</span></button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Pet name</label>
+          <input type="text" id="pet-name" placeholder="e.g. Bruno" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;outline:none;" oninput="checkReady()">
+        </div>
+
+        <label style="font-size:13px;font-weight:600;display:block;margin-bottom:8px;">Upload bark audio</label>
+        <div class="upload-area" id="audio-drop" onclick="document.getElementById('audio-input').click()">
+          <div class="icon">🎵</div>
+          <h4>Drop audio file here</h4>
+          <p>MP3, WAV, M4A supported</p>
+          <p class="cta">Click to browse files</p>
+          <input type="file" id="audio-input" accept="audio/*" onchange="handleAudio(this)">
+        </div>
+
+        <div class="waveform-container" id="waveform-box">
+          <div class="waveform-header">
+            <span class="waveform-label" id="audio-filename">Recording</span>
+            <span class="waveform-status">Ready to analyze</span>
+          </div>
+          <div class="waveform-bars" id="waveform-bars"></div>
+          <div class="waveform-note">Audio loaded — AI will extract MFCC + STFT features on analysis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📸</div>
+        <div>
+          <h3>Facial Photo</h3>
+          <p>Upload a clear photo of your dog's face</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-box">
+          <strong>How it works:</strong> Our vision model (based on ResNet architecture) analyzes ear position, eye shape, mouth tension, and facial muscle cues — detecting emotions like anxiety, pain, happiness, and calm.
+        </div>
+
+        <label style="font-size:13px;font-weight:600;display:block;margin-bottom:8px;margin-top:38px;">Upload dog's photo</label>
+        <div class="upload-area" id="photo-drop" onclick="document.getElementById('photo-input').click()">
+          <div class="icon">📷</div>
+          <h4>Drop photo here</h4>
+          <p>JPG, PNG supported · Clear face shot preferred</p>
+          <p class="cta">Click to browse files</p>
+          <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(this)">
+        </div>
+
+        <div class="face-preview" id="face-preview">
+          <div class="face-frame" id="face-frame">
+            🐶
+            <div class="face-box-overlay">
+              <div class="corner tl"></div><div class="corner tr"></div>
+              <div class="corner bl"></div><div class="corner br"></div>
+            </div>
+          </div>
+          <p class="face-caption">Face detected — ready for emotion analysis</p>
+        </div>
+
+        <div style="margin-top:20px;">
+          <button class="analyze-btn" id="analyze-btn" onclick="runAnalysis()" disabled>
+            <div class="spinner" id="spinner"></div>
+            <span id="btn-text">🔍 Analyze Now</span>
+          </button>
+          <div class="progress-wrap" id="progress-wrap">
+            <div class="progress-label"><span id="progress-step-label">Processing...</span><span id="progress-pct">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+            <div class="progress-steps">
+              <span class="step-pill" id="s1">Loading audio</span>
+              <span class="step-pill" id="s2">MFCC extraction</span>
+              <span class="step-pill" id="s3">STFT analysis</span>
+              <span class="step-pill" id="s4">Facial detection</span>
+              <span class="step-pill" id="s5">Emotion scoring</span>
+              <span class="step-pill" id="s6">Generating report</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-section" id="results-section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h2 style="font-size:20px;font-weight:700;">Analysis Report — <span id="result-pet-name">Bruno</span></h2>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">Generated on <span id="result-date"></span> · Powered by JeevMitr AI</p>
+      </div>
+      <button onclick="resetForm()" style="padding:8px 16px;border:1px solid var(--border);background:white;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;">↩ New Analysis</button>
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric"><div class="metric-label">Health score</div><div class="metric-value green">84%</div><div class="metric-tag green">Good</div></div>
+      <div class="metric"><div class="metric-label">Stress level</div><div class="metric-value amber">6.2/10</div><div class="metric-tag amber">Moderate</div></div>
+      <div class="metric"><div class="metric-label">Bark type</div><div class="metric-value" style="font-size:16px;padding-top:4px;">Alert</div><div class="metric-tag amber">Attention-seeking</div></div>
+      <div class="metric"><div class="metric-label">Overall mood</div><div class="metric-value" style="font-size:16px;padding-top:4px;">Anxious</div><div class="metric-tag amber">Monitor closely</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">😊</div>
+          <div><h3>Emotion Analysis</h3><p>Combined bark + facial scoring</p></div>
+        </div>
+        <div class="card-body">
+          <div class="tab-row">
+            <div class="tab active">Combined</div>
+            <div class="tab">Bark only</div>
+            <div class="tab">Facial only</div>
+          </div>
+          <div class="emotion-section">
+            <div class="emotion-row"><span class="e-label">Anxious</span><div class="e-bar-bg"><div class="e-bar" id="e1" style="background:#EF9F27;"></div></div><span class="e-pct">62%</span></div>
+            <div class="emotion-row"><span class="e-label">Alert</span><div class="e-bar-bg"><div class="e-bar" id="e2" style="background:#1D9E75;"></div></div><span class="e-pct">21%</span></div>
+            <div class="emotion-row"><span class="e-label">Neutral</span><div class="e-bar-bg"><div class="e-bar" id="e3" style="background:#888780;"></div></div><span class="e-pct">12%</span></div>
+            <div class="emotion-row"><span class="e-label">Pain signs</span><div class="e-bar-bg"><div class="e-bar" id="e4" style="background:#E24B4A;"></div></div><span class="e-pct">5%</span></div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">
+            <strong style="color:var(--text);">AI interpretation:</strong> High-pitched alert barks combined with tense brow muscles and pulled-back ears indicate moderate anxiety. No signs of acute pain detected.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <div><h3>Health Summary</h3><p>Automated indicator checklist</p></div>
+        </div>
+        <div class="card-body">
+          <table class="report-table">
+            <tr><td>Emotional state</td><td><span class="pill pill-amber">Anxious</span></td></tr>
+            <tr><td>Pain indicators</td><td><span class="pill pill-green">None detected</span></td></tr>
+            <tr><td>Respiratory sound</td><td><span class="pill pill-green">Normal</span></td></tr>
+            <tr><td>Bark frequency</td><td><span class="pill pill-amber">Elevated</span></td></tr>
+            <tr><td>Eye tension</td><td><span class="pill pill-amber">Mild</span></td></tr>
+            <tr><td>Ear position</td><td><span class="pill pill-amber">Pulled back</span></td></tr>
+            <tr><td>Environmental alert</td><td><span class="pill pill-green">None</span></td></tr>
+            <tr><td>Vet visit needed</td><td><span class="pill pill-amber">Within 7 days</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <div class="card-icon">💡</div>
+        <div><h3>Recommendations</h3><p>Based on AI analysis</p></div>
+      </div>
+      <div class="card-body">
+        <div class="rec-list">
+          <div class="rec-item rec-urgent">
+            <div class="rec-icon">🩺</div>
+            <div><div class="rec-title">Schedule a vet consultation within 7 days</div><div class="rec-desc">Moderate anxiety levels detected. A vet can rule out any underlying health conditions causing distress and suggest appropriate treatment.</div></div>
+          </div>
+          <div class="rec-item rec-urgent">
+            <div class="rec-icon">🧘</div>
+            <div><div class="rec-title">Try calming exercises and reduced stimulation</div><div class="rec-desc">Bark pattern suggests environmental stress triggers. Try reducing loud sounds, create a safe space, and consider calming wraps or pheromone diffusers.</div></div>
+          </div>
+          <div class="rec-item rec-ok">
+            <div class="rec-icon">🏃</div>
+            <div><div class="rec-title">Increase physical exercise and mental stimulation</div><div class="rec-desc">Alert barking often indicates pent-up energy. Two 30-minute walks daily plus puzzle toys can significantly reduce anxiety-driven barking.</div></div>
+          </div>
+          <div class="rec-item rec-ok">
+            <div class="rec-icon">📅</div>
+            <div><div class="rec-title">Re-analyze in 7 days to track improvement</div><div class="rec-desc">Regular monitoring helps track your dog's emotional and physical progress over time. JeevMitr stores all reports for easy comparison.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-cta">
+      <h3>Take action for your pet's wellbeing</h3>
+      <p>Book a vet appointment or connect with a trainer directly from JeevMitr</p>
+      <div class="book-cta-btns">
+        <a href="pet-healthcare.html" class="book-btn book-btn-primary">🩺 Book Vet Appointment</a>
+        <a href="pet-training.html" class="book-btn book-btn-secondary">🐾 Find a Trainer</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--white);border-top:1px solid var(--border);padding:24px;text-align:center;margin-top:40px;font-size:13px;color:var(--text-muted);">
+  © 2025 JeevMitr. Making pet healthcare accessible through AI and community.
+</footer>
+
+<script>
+  function selectPet(btn) {
+    document.querySelectorAll('.pet-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function handleAudio(input) {
+    if (!input.files[0]) return;
+    document.getElementById('audio-filename').textContent = input.files[0].name;
+    const box = document.getElementById('waveform-box');
+    box.style.display = 'block';
+    const bars = document.getElementById('waveform-bars');
+    bars.innerHTML = '';
+    const heights = [18,24,32,40,38,44,42,38,44,40,36,30,22,28,20,16,24,30,36,32,26,20,14,18,22,16,12,18,24,20,15];
+    heights.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'bar';
+      b.style.height = h + 'px';
+      if (i >= 5 && i <= 9) { b.style.opacity = '1'; b.style.background = 'var(--primary-dark)'; }
+      bars.appendChild(b);
+    });
+    document.getElementById('audio-drop').classList.add('active');
+    checkReady();
+  }
+
+  function handlePhoto(input) {
+    if (!input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const frame = document.getElementById('face-frame');
+      frame.style.backgroundImage = 'url(' + e.target.result + ')';
+      frame.style.backgroundSize = 'cover';
+      frame.style.backgroundPosition = 'center';
+      frame.innerHTML = '<div class="face-box-overlay"><div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div></div>';
+    };
+    reader.readAsDataURL(input.files[0]);
+    document.getElementById('face-preview').style.display = 'block';
+    document.getElementById('photo-drop').classList.add('active');
+    checkReady();
+  }
+
+  function checkReady() {
+    const hasAudio = document.getElementById('audio-input').files[0];
+    const hasPhoto = document.getElementById('photo-input').files[0];
+    const hasName = document.getElementById('pet-name').value.trim();
+    document.getElementById('analyze-btn').disabled = !(hasAudio && hasPhoto && hasName);
+  }
+
+  var steps = [
+    { id: 's1', label: 'Loading audio file...', pct: 15 },
+    { id: 's2', label: 'Extracting MFCC features...', pct: 30 },
+    { id: 's3', label: 'Running STFT analysis...', pct: 48 },
+    { id: 's4', label: 'Detecting facial landmarks...', pct: 65 },
+    { id: 's5', label: 'Scoring emotional state...', pct: 82 },
+    { id: 's6', label: 'Generating health report...', pct: 100 }
+  ];
+
+  function runAnalysis() {
+    var btn = document.getElementById('analyze-btn');
+    btn.disabled = true;
+    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('btn-text').textContent = 'Analyzing...';
+    document.getElementById('progress-wrap').style.display = 'block';
+    var i = 0;
+    function nextStep() {
+      if (i > 0) document.getElementById(steps[i-1].id).className = 'step-pill done';
+      if (i < steps.length) {
+        document.getElementById(steps[i].id).className = 'step-pill active';
+        document.getElementById('progress-step-label').textContent = steps[i].label;
+        document.getElementById('progress-pct').textContent = steps[i].pct + '%';
+        document.getElementById('progress-fill').style.width = steps[i].pct + '%';
+        i++;
+        setTimeout(nextStep, 700);
+      } else { showResults(); }
+    }
+    nextStep();
+  }
+
+  function showResults() {
+    var petName = document.getElementById('pet-name').value.trim();
+    document.getElementById('result-pet-name').textContent = petName;
+    document.getElementById('result-date').textContent = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+    var rs = document.getElementById('results-section');
+    rs.style.display = 'block';
+    rs.classList.add('show');
+    rs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(function() {
+      document.getElementById('e1').style.width = '62%';
+      document.getElementById('e2').style.width = '21%';
+      document.getElementById('e3').style.width = '12%';
+      document.getElementById('e4').style.width = '5%';
+    }, 400);
+  }
+
+  function resetForm() {
+    document.getElementById('results-section').classList.remove('show');
+    document.getElementById('results-section').style.display = 'none';
+    document.getElementById('analyze-btn').disabled = true;
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('btn-text').textContent = '🔍 Analyze Now';
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.getElementById('progress-fill').style.width = '0%';
+    document.getElementById('waveform-box').style.display = 'none';
+    document.getElementById('face-preview').style.display = 'none';
+    document.getElementById('audio-drop').classList.remove('active');
+    document.getElementById('photo-drop').classList.remove('active');
+    document.getElementById('audio-input').value = '';
+    document.getElementById('photo-input').value = '';
+    document.getElementById('pet-name').value = '';
+    steps.forEach(function(s) { document.getElementById(s.id).className = 'step-pill'; });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
